@@ -3,16 +3,16 @@ import T from 'prop-types';
 import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
 import styles from '../../styles/styles.module.css';
 
-export default function ImageGallery({ images }) {
+export default function ImageGallery({ images, onOpen }) {
   return (
     <ul className={styles.ImageGallery}>
       {images.map(({ id, webformatURL, largeImageURL }) => (
-        <li key={id}>
-          <ImageGalleryItem
-            webformatURL={webformatURL}
-            largeImageURL={largeImageURL}
-          />
-        </li>
+        <ImageGalleryItem
+          key={id}
+          webformatURL={webformatURL}
+          largeImageURL={largeImageURL}
+          onOpen={onOpen}
+        />
       ))}
     </ul>
   );
@@ -20,4 +20,5 @@ export default function ImageGallery({ images }) {
 
 ImageGallery.propTypes = {
   images: T.shape.isRequired,
+  onOpen: T.func.isRequired,
 };

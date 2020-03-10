@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import SearchBar from './Components/SearchBar/SearchBar';
-import ImageGallery from './Components/ImageGallery/ImageGallery';
-import Button from './Components/Button/Button';
-import Loading from './Components/Loading/Loading';
+import SearchBar from './components/SearchBar/SearchBar';
+import ImageGallery from './components/ImageGallery/ImageGallery';
+import Button from './components/Button/Button';
+import Loading from './components/Loading/Loading';
+import Modal from './components/Modal/Modal';
 import fetchImages from './API/images-api';
 
 export default class App extends Component {
@@ -12,6 +13,9 @@ export default class App extends Component {
     query: '',
     buttonAvailable: false,
     isLoading: false,
+    error: null,
+    largeImageUrl: null,
+    openModal: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -42,22 +46,45 @@ export default class App extends Component {
   fetchImagesList = () => {
     const { query, pageNumber } = this.state;
     this.setState({ isLoading: true });
-    fetchImages(query, pageNumber).then(images => {
-      this.setState(state => ({
-        pageNumber: state.pageNumber + 1,
-        images: [...state.images, ...images],
-        isLoading: false,
-        buttonAvailable: true,
-      }));
-    });
+
+    fetchImages(query, pageNumber)
+      .then(images =>
+        this.setState(state => ({
+          pageNumber: state.pageNumber + 1,
+          images: [...state.images, ...images],
+          buttonAvailable: true,
+        })),
+      )
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
+  };
+
+  setLargeImage = largeImageUrl => {
+    this.setState({ largeImageUrl });
+    this.toggleModal();
+  };
+
+  toggleModal = () => {
+    this.setState(state => ({ openModal: !state.openModal }));
   };
 
   render() {
-    const { images, isLoading, buttonAvailable } = this.state;
+    const {
+      images,
+      isLoading,
+      buttonAvailable,
+      openModal,
+      error,
+      largeImageUrl,
+    } = this.state;
     return (
       <>
         <SearchBar onSearch={this.onSearch} />
-        <ImageGallery images={images} />
+        {error && <p>Error catched: {error.message} </p>}
+        <ImageGallery images={images} onOpen={this.setLargeImage} />
+        {openModal && (
+          <Modal largeImageUrl={largeImageUrl} onClose={this.toggleModal} />
+        )}
         {isLoading && <Loading />}
         {buttonAvailable && <Button buttonClick={this.fetchImagesList} />}
       </>

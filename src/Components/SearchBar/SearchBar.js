@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
+import T from 'prop-types';
 import styles from '../../styles/styles.module.css';
 
 export default class SearchBar extends Component {
   state = {
     query: '',
+  };
+
+  propTypes = {
+    onSearch: T.func.isRequired,
   };
 
   handleChange = e => {
@@ -28,7 +33,6 @@ export default class SearchBar extends Component {
             className={styles.SearchFormInput}
             type="text"
             autoComplete="off"
-            autoFocus
             placeholder="Search photos and images"
             onChange={this.handleChange}
           />
