@@ -9,7 +9,7 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-loader-spinner": "^3.1.5",
-    "react-scripts": "3.2.0",
+    "react-scripts": "5.0.1",
     "shortid": "^2.2.15"
   },
   "homepage": "https://MaxMelnik1311.github.io/goit-react-hw-03-image-finder",
